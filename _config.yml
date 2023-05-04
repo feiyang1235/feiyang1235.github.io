@@ -3,12 +3,12 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle: ''
-description: ''
-keywords:
-author: John Doe
-language: en
+title: 二毛的博客
+subtitle: 搬砖工的自我修养
+description: 主要技术栈为移动端，前端，node.js等，有点不正常的搬砖工，啥都喜欢尝试~
+keywords: "Android,Gradle,React Native,Webpack,NodeJs"
+author: ermao
+language: zh-CN
 timezone: ''
 
 # URL
@@ -97,7 +97,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
