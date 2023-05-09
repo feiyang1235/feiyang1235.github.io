@@ -5,7 +5,7 @@
 # Site
 title: 二毛的博客
 subtitle: 搬砖工的自我修养
-description: 主要技术栈为移动端，前端，node.js等，有点不正常的搬砖工，啥都喜欢尝试~
+description: 主要技术栈为移动端，前端，node.js，有点不正常的搬砖工
 keywords: "Android,Gradle,React Native,Webpack,NodeJs"
 author: ermao
 language: zh-CN
@@ -40,7 +40,7 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 highlight:
@@ -81,7 +81,7 @@ meta_generator: true
 date_format: YYYY-MM-DD
 time_format: HH:mm:ss
 ## updated_option supports 'mtime', 'date', 'empty'
-updated_option: 'mtime'
+updated_option: 'empty'
 
 # Pagination
 ## Set per_page to 0 to disable pagination
