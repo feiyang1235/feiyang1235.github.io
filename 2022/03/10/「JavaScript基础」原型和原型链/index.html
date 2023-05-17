@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前言从JavaScript开始流行到今天，学习它的人都会有个疑惑——JavaScript是不是面向对象语言？其实，ECMA-262早就给出了答案，在ECMAScript的第一个版本中就明确指出，ECMAScript是一种面向对象的语言，参见如下引文：1ECMAScript is an object-oriented programming language for performing compu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「JavaScript基础」原型和原型链">
+<meta property="og:url" content="http://example.com/2022/03/10/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/index.html">
+<meta property="og:site_name" content="二毛的博客">
+<meta property="og:description" content="前言从JavaScript开始流行到今天，学习它的人都会有个疑惑——JavaScript是不是面向对象语言？其实，ECMA-262早就给出了答案，在ECMAScript的第一个版本中就明确指出，ECMAScript是一种面向对象的语言，参见如下引文：1ECMAScript is an object-oriented programming language for performing compu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/03/10/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/image1.png">
+<meta property="og:image" content="http://example.com/2022/03/10/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/image2.png">
+<meta property="og:image" content="http://example.com/2022/03/10/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/image3.png">
+<meta property="og:image" content="http://example.com/2022/03/10/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/image4.png">
+<meta property="article:published_time" content="2022-03-10T14:14:45.000Z">
+<meta property="article:author" content="ermao">
+<meta property="article:tag" content="JavaScript基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/03/10/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/image1.png">
+
+<link rel="canonical" href="http://example.com/2022/03/10/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>「JavaScript基础」原型和原型链 | 二毛的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="二毛的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">二毛的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">搬砖工的自我修养</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/feiyang1235" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/10/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="ermao">
+      <meta itemprop="description" content="主要技术栈为移动端，前端，一个不正经的搬砖工">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二毛的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          「JavaScript基础」原型和原型链
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-10 22:14:45" itemprop="dateCreated datePublished" datetime="2022-03-10T22:14:45+08:00">2022-03-10</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>从JavaScript开始流行到今天，学习它的人都会有个疑惑——JavaScript是不是面向对象语言？其实，ECMA-262早就给出了答案，在ECMAScript的第一个版本中就明确指出，ECMAScript是一种面向对象的语言，参见如下引文：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ECMAScript is an object-oriented programming language for performing computations and manipulating computational objects within a host environment.</span><br></pre></td></tr></table></figure><br>既然ECMAScript是面向对象的，那么JavaScript作为ECMAScript的一个分支，当然也是一种面向对象的语言。常见的C#、Java这样面向对象语言是基于类（class-based）的面向对象，而<strong>JavaScript是基于原型（prototype-based）的面向对象。</strong></p>
+<h1 id="基于原型的继承"><a href="#基于原型的继承" class="headerlink" title="基于原型的继承"></a>基于原型的继承</h1><p>对于使用过基于类的语言 (如 Java 或 C++) 的开发者们来说，JavaScript 实在是有些令人困惑 —— JavaScript 是动态的，本身不提供一个 class 的实现。即便是在 ES2015/ES6 中引入了 class 关键字，但那也只是语法糖，JavaScript 仍然是基于原型的。</p>
+<h2 id="prototype"><a href="#prototype" class="headerlink" title="prototype"></a>prototype</h2><p>JavaScript 对象有一个指向一个原型对象的链。当试图访问一个对象的属性时，它不仅仅在该对象上搜寻，还会搜寻该对象的原型，以及该对象的原型的原型，依次层层向上搜索，直到找到一个名字匹配的属性或到达原型链的末尾。<br>我们先来看几个例子<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function Person() &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">var person = new Person();</span><br><span class="line">person.name = &#x27;二毛&#x27;;</span><br><span class="line">console.log(person.name) // 二毛</span><br></pre></td></tr></table></figure><br>上述例子，Person被视为一个构造函数，通过new关键字实例化了对象<code>person</code>，可以看到 JavaScript 可以直接为对象构造器未声明的属性复制。<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function Person() &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var person = new Person();</span><br><span class="line">person.name = &#x27;二毛&#x27;;</span><br><span class="line">console.log(person.name) // 二毛</span><br><span class="line"></span><br><span class="line">Person.prototype.age = 18;</span><br><span class="line">var person1 = new Person();</span><br><span class="line">var person2 = new Person();</span><br><span class="line"></span><br><span class="line">console.log(person.age) // 18</span><br><span class="line">console.log(person1.age) // 18</span><br><span class="line">console.log(person2.age) // 18</span><br></pre></td></tr></table></figure><br>每个函数都有一个 <code>prototype</code> 属性, 函数的 <code>prototype</code> 属性指向了一个对象，这个对象正是调用该构造函数而创建的实例的原型，也就是上述例子中的person, person1 和 person2 的原型。那什么是原型呢？可以这样理解：<strong>每一个JavaScript对象(null除外)在创建的时候就会与之关联另一个对象，这个对象就是我们所说的原型，每一个对象都会从原型继承属性。</strong><br>用一张图来表示他们的关系：<br><img src="/2022/03/10/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/image1.png" class="" title="原型链关系图1"><br>上图显示了构造函数与实例原型之间的关系，那么实例又是访问到实例原型的呢？你需要了解实例对象的一个隐式属性 <code>__proto__</code></p>
+<h2 id="proto"><a href="#proto" class="headerlink" title="__proto__"></a>__proto__</h2><p>这是每一个JavaScript对象(除了 null )都具有的一个属性，叫 <code>__proto__</code>，这个属性会指向该对象的原型。<br>尝试运行以下代码<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function Person() &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">var person = new Person();</span><br><span class="line">console.log(person.__proto__ === Person.prototype); // true</span><br></pre></td></tr></table></figure><br>到此，我们可以更新一下上述关系图<br><img src="/2022/03/10/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/image2.png" class="" title="原型链关系图2"></p>
+<h2 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor"></a>constructor</h2><p>每个原型都存在一个属性 constructor，该属性指向其关联的构造函数。<br>尝试运行以下代码<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function Person() &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">console.log(Person === Person.prototype.constructor); // true</span><br></pre></td></tr></table></figure><br>我们可以把 constructor 更新到上述关系图中<br><img src="/2022/03/10/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/image3.png" class="" title="原型链关系图3"></p>
+<h2 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h2><p>原型其实也是一个对象，既然是对象，那么他的原型又是什么呢？可以运行一下以下的代码<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function Person()&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">const person = new Person();</span><br><span class="line">console.log(Person.prototype.__proto__ === Object.prototype) //true</span><br><span class="line">console.log(Object.prototype.__proto__) //null</span><br></pre></td></tr></table></figure><br>可以发现 <code>Person.prototype</code>对象的原型其实就是 <code>Object</code> 的原型，换句话说， <code>person</code> 对象的<code>__proto__</code> 是 <code>Person.prototype</code>，<code>person</code> 的 <code>__proto__</code>的<code>__proto___</code>是<code>Object.prototype</code>，而 <code>Object.prototype</code> 的原型 <code>__proto__</code> 就是 null 了。<br>最后补充上原型链的访问，关系图可以更新为如下：<br><img src="/2022/03/10/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/image4.png" class="" title="原型链关系图4"></p>
+<p>到此，我们可以不妨再回头再重新理解一下这段话“<strong>JavaScript 对象有一个指向一个原型对象的链。当试图访问一个对象的属性时，它不仅仅在该对象上搜寻，还会搜寻该对象的原型，以及该对象的原型的原型，依次层层向上搜索，直到找到一个名字匹配的属性或到达原型链的末尾。</strong>”</p>
+<h1 id="使用不同的方式来创建对象和生成原型链"><a href="#使用不同的方式来创建对象和生成原型链" class="headerlink" title="使用不同的方式来创建对象和生成原型链"></a>使用不同的方式来创建对象和生成原型链</h1><h2 id="使用语法结构创建的对象"><a href="#使用语法结构创建的对象" class="headerlink" title="使用语法结构创建的对象"></a>使用语法结构创建的对象</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">var o = &#123;a: 1&#125;;</span><br><span class="line"></span><br><span class="line">// o 这个对象继承了 Object.prototype 上面的所有属性</span><br><span class="line">// Object.prototype 的原型为 null</span><br><span class="line">// 原型链如下：</span><br><span class="line">// o ---&gt; Object.prototype ---&gt; null</span><br><span class="line"></span><br><span class="line">var a = [&quot;yo&quot;, &quot;whadup&quot;, &quot;?&quot;];</span><br><span class="line"></span><br><span class="line">// 数组都继承于 Array.prototype</span><br><span class="line">// (Array.prototype 中包含 indexOf, forEach 等方法)</span><br><span class="line">// 原型链如下：</span><br><span class="line">// a ---&gt; Array.prototype ---&gt; Object.prototype ---&gt; null</span><br><span class="line"></span><br><span class="line">function f()&#123;</span><br><span class="line">  return 2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 函数都继承于 Function.prototype</span><br><span class="line">// (Function.prototype 中包含 call, bind 等方法)</span><br><span class="line">// 原型链如下：</span><br><span class="line">// f ---&gt; Function.prototype ---&gt; Object.prototype ---&gt; null</span><br><span class="line"></span><br><span class="line">const person=&#123;</span><br><span class="line">    name: &#x27;二毛&#x27;,</span><br><span class="line">    __proto__: &#123;</span><br><span class="line">        age: 18,</span><br><span class="line">        getMoney: ()=&gt;&#123;</span><br><span class="line">            return &quot;100w&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// person这个对象有自己的隐式原型对象，由__proto__主动</span><br><span class="line">// 声明， 所以他的原型链如下：</span><br><span class="line">// person -&gt; &#123; age: 18, getMoney: ()=&gt;&#123; return &quot;100w&quot; &#125; &#125; -&gt; Object.prototype -&gt; null</span><br></pre></td></tr></table></figure>
+<h2 id="使用构造器创建的对象"><a href="#使用构造器创建的对象" class="headerlink" title="使用构造器创建的对象"></a>使用构造器创建的对象</h2><p>在 JavaScript 中，构造器其实就是一个普通的函数。当使用 new操作符 来作用这个函数时，它就可以被称为构造函数。<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function Person() &#123;</span><br><span class="line">  this.name = &#x27;二毛&#x27;;</span><br><span class="line">  this.age = 18;</span><br><span class="line">  this.deposits = 100</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype = &#123;</span><br><span class="line">  increase: function(v)&#123;</span><br><span class="line">    this.deposits+=v;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">var ermao = new Person();</span><br><span class="line">// ermao 是生成的对象，他的自身属性有 &#x27;name&#x27; , &#x27;age&#x27; 和 &#x27;deposits&#x27;。</span><br><span class="line">// 在 ermao 被实例化时，ermao.[[Prototype]] 指向了 Person.prototype。添加了一个 increase 方法</span><br></pre></td></tr></table></figure></p>
+<h2 id="使用-Object-create-创建的对象"><a href="#使用-Object-create-创建的对象" class="headerlink" title="使用 Object.create 创建的对象"></a>使用 Object.create 创建的对象</h2><p>ECMAScript 5 中引入了一个新方法：<code>Object.create()</code>。可以调用这个方法来创建一个新对象。新对象的原型就是调用 create 方法时传入的第一个参数：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">var a = &#123;a: 1&#125;;</span><br><span class="line">// a ---&gt; Object.prototype ---&gt; null</span><br><span class="line"></span><br><span class="line">var b = Object.create(a);</span><br><span class="line">// b ---&gt; a ---&gt; Object.prototype ---&gt; null</span><br><span class="line">console.log(b.a); // 1 (继承而来)</span><br><span class="line"></span><br><span class="line">var c = Object.create(b);</span><br><span class="line">// c ---&gt; b ---&gt; a ---&gt; Object.prototype ---&gt; null</span><br><span class="line"></span><br><span class="line">var d = Object.create(null);</span><br><span class="line">// d ---&gt; null</span><br><span class="line">console.log(d.hasOwnProperty); // undefined，因为 d 没有继承 Object.prototype</span><br></pre></td></tr></table></figure></p>
+<h2 id="使用-class-关键字创建的对象"><a href="#使用-class-关键字创建的对象" class="headerlink" title="使用 class 关键字创建的对象"></a>使用 class 关键字创建的对象</h2><p>ECMAScript6 引入了一套新的关键字用来实现 class。使用基于类语言的开发人员会对这些结构感到熟悉。但它们仍然是基于 JavaScript 原型实现的，对于 JavaScript 来说属于一种语法糖。这些新的关键字包括 class, constructor，static，extends 以及 super。<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&quot;use strict&quot;;</span><br><span class="line"></span><br><span class="line">class Person &#123;</span><br><span class="line">  constructor(name, age) &#123;</span><br><span class="line">    this.name = name;</span><br><span class="line">    this.age = age;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Man extends Person &#123;</span><br><span class="line">  constructor(name, age) &#123;</span><br><span class="line">    super(name, age);</span><br><span class="line">  &#125;</span><br><span class="line">  get name() &#123;</span><br><span class="line">    return this.name;</span><br><span class="line">  &#125;</span><br><span class="line">  set age(age) &#123;</span><br><span class="line">    this.age = age;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var zhangsan = new Man(&#x27;zhangsan&#x27;, 20);</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h1 id="原型的性能"><a href="#原型的性能" class="headerlink" title="原型的性能"></a>原型的性能</h1><p>在原型链上查找属性比较耗时，对性能有副作用，在性能要求苛刻的情况下考虑较少的遍历会变得很重要。此外，访问不存在的属性时会遍历整个原型链。</p>
+<p>遍历对象的属性时，原型链上的每个可枚举属性都会被枚举出来。要检查对象是否具有自己定义的属性，而不是其原型链上的某个属性，可以使用对象从 Object.prototype 继承的 hasOwnProperty方法。（或者Object.keys()方法）<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">console.log(ermao.hasOwnProperty(&#x27;name&#x27;)); // true</span><br><span class="line">console.log(ermao.__proto__.hasOwnProperty(&#x27;increase&#x27;)); // true</span><br></pre></td></tr></table></figure><br>有一个小点需要注意的是我们不能通过判断属性是否为 <code>undefined</code> 来判断其是否存在，因为在某些情况下该属性可能存在，但其值恰好被设置成了 <code>undefined</code>。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>在使用原型继承编写复杂代码之前，理解原型继承模型是至关重要的。此外，请注意代码中原型链的长度，并在必要时将其分解，以避免可能的性能问题。此外，原生原型不应该被扩展，除非它是为了与新的 JavaScript 特性兼容。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/JavaScript%E5%9F%BA%E7%A1%80/" rel="tag"># JavaScript基础</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/08/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%97%AD%E5%8C%85/" rel="prev" title="「JavaScript基础」作用域和闭包">
+      <i class="fa fa-chevron-left"></i> 「JavaScript基础」作用域和闭包
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%8E%9F%E5%9E%8B%E7%9A%84%E7%BB%A7%E6%89%BF"><span class="nav-number">2.</span> <span class="nav-text">基于原型的继承</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#prototype"><span class="nav-number">2.1.</span> <span class="nav-text">prototype</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#proto"><span class="nav-number">2.2.</span> <span class="nav-text">__proto__</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constructor-NaN"><span class="nav-number">2.3.</span> <span class="nav-text">constructor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B%E9%93%BE"><span class="nav-number">2.4.</span> <span class="nav-text">原型链</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E6%96%B9%E5%BC%8F%E6%9D%A5%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E5%92%8C%E7%94%9F%E6%88%90%E5%8E%9F%E5%9E%8B%E9%93%BE"><span class="nav-number">3.</span> <span class="nav-text">使用不同的方式来创建对象和生成原型链</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%AF%AD%E6%B3%95%E7%BB%93%E6%9E%84%E5%88%9B%E5%BB%BA%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.1.</span> <span class="nav-text">使用语法结构创建的对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9E%84%E9%80%A0%E5%99%A8%E5%88%9B%E5%BB%BA%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.2.</span> <span class="nav-text">使用构造器创建的对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-Object-create-%E5%88%9B%E5%BB%BA%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.3.</span> <span class="nav-text">使用 Object.create 创建的对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-class-%E5%85%B3%E9%94%AE%E5%AD%97%E5%88%9B%E5%BB%BA%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.4.</span> <span class="nav-text">使用 class 关键字创建的对象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B%E7%9A%84%E6%80%A7%E8%83%BD"><span class="nav-number">4.</span> <span class="nav-text">原型的性能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">5.</span> <span class="nav-text">结论</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ermao"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">ermao</p>
+  <div class="site-description" itemprop="description">主要技术栈为移动端，前端，一个不正经的搬砖工</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ermao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '30cf1aa4b14a1cbce4c2',
+      clientSecret: 'ebb9219637c7ab1a0494e3fe3df9baa7c4295cf7',
+      repo        : 'feiyang1235.github.io',
+      owner       : 'feiyang1235',
+      admin       : ['feiyang1235'],
+      id          : '53f9096702f4c42e5b1a4102dfbf7ba6',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>
