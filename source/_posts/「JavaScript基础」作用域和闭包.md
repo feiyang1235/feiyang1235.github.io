@@ -1,6 +1,6 @@
 ---
 title: 「JavaScript基础」作用域和闭包
-date: 2022-03-08 21:15:23
+date: 2023-05-08 21:15:23
 tags: JavaScript基础
 ---
 # 作用域
