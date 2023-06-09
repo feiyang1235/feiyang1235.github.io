@@ -20,18 +20,19 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="主要技术栈为移动端，前端，一个不正经的搬砖工">
-<meta property="og:type" content="website">
-<meta property="og:title" content="二毛的博客">
-<meta property="og:url" content="http://example.com/archives/2023/05/index.html">
+  <meta name="description" content="React Native组件的生命周期可以分为三个阶段：挂载阶段、更新阶段和卸载阶段。 挂载阶段constructor(props)：组件被创建时调用，可以在这里初始化state对象或绑定成员函数的this指向。 static getDerivedStateFromProps(props, state)：每次组件被重新渲染前都会调用，它可以返回一个对象来更新state，或者返回null来表示新pr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="reactNative生命周期详解">
+<meta property="og:url" content="http://example.com/2023/06/09/reactNative%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="二毛的博客">
-<meta property="og:description" content="主要技术栈为移动端，前端，一个不正经的搬砖工">
+<meta property="og:description" content="React Native组件的生命周期可以分为三个阶段：挂载阶段、更新阶段和卸载阶段。 挂载阶段constructor(props)：组件被创建时调用，可以在这里初始化state对象或绑定成员函数的this指向。 static getDerivedStateFromProps(props, state)：每次组件被重新渲染前都会调用，它可以返回一个对象来更新state，或者返回null来表示新pr">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-06-09T07:55:40.000Z">
 <meta property="article:author" content="ermao">
 <meta property="article:tag" content="Android,Gradle,React Native,Webpack,NodeJs">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/archives/2023/05/">
+<link rel="canonical" href="http://example.com/2023/06/09/reactNative%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E8%AF%A6%E8%A7%A3/">
 
 
 <script id="page-configurations">
@@ -39,12 +40,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | 二毛的博客</title>
+  <title>reactNative生命周期详解 | 二毛的博客</title>
   
 
 
@@ -147,76 +148,93 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 5 篇日志。 继续努力。</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/06/09/reactNative%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="ermao">
+      <meta itemprop="description" content="主要技术栈为移动端，前端，一个不正经的搬砖工">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二毛的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          reactNative生命周期详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-06-09 15:55:40" itemprop="dateCreated datePublished" datetime="2023-06-09T15:55:40+08:00">2023-06-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2023</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-05-16T22:14:45+08:00"
-              content="2023-05-16">
-          05-16
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/05/16/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/" itemprop="url">
-            <span itemprop="name">「JavaScript基础」原型和原型链</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-05-08T21:15:23+08:00"
-              content="2023-05-08">
-          05-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/05/08/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E9%97%AD%E5%8C%85/" itemprop="url">
-            <span itemprop="name">「JavaScript基础」作用域和闭包</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+        <p><strong>React Native组件的生命周期可以分为三个阶段：挂载阶段、更新阶段和卸载阶段。</strong></p>
+<h1 id="挂载阶段"><a href="#挂载阶段" class="headerlink" title="挂载阶段"></a>挂载阶段</h1><p><code>constructor(props)</code>：组件被创建时调用，可以在这里初始化state对象或绑定成员函数的this指向。</p>
+<p><code>static getDerivedStateFromProps(props, state)</code>：每次组件被重新渲染前都会调用，它可以返回一个对象来更新state，或者返回null来表示新props不需要更新state。</p>
+<p><code>render()</code>：根据组件的props和state属性，生成虚拟DOM，即React元素。</p>
+<p><code>componentDidMount()</code>：组件渲染完成后调用，通常在这里进行一些网络请求、添加订阅等操作。</p>
+<h1 id="更新阶段"><a href="#更新阶段" class="headerlink" title="更新阶段"></a>更新阶段</h1><p><code>static getDerivedStateFromProps(props, state)</code>：和挂载阶段一样，在每次更新前都会被调用。</p>
+<p><code>shouldComponentUpdate(nextProps, nextState)</code>：组件更新前会调用这个方法，它返回一个布尔值，表示是否允许更新，默认返回true。</p>
+<p><code>render()</code>：同挂载阶段。</p>
+<p><code>getSnapshotBeforeUpdate()</code>：在最近一次渲染输出（提交到DOM节点）之前调用，它可以在组件发生变化前捕获一些信息（例如滚动位置），并在 <code>componentDidUpdate()</code>中进行处理。</p>
+<p><code>componentDidUpdate(prevProps, prevState, snapshot)</code>：组件更新后调用，通常在这里进行一些DOM操作、网络请求等操作。</p>
+<h1 id="卸载阶段"><a href="#卸载阶段" class="headerlink" title="卸载阶段"></a>卸载阶段</h1><p><code>componentWillUnmount()</code>：组件卸载前调用，通常在这里进行一些清理操作，例如取消网络请求、清除定时器等。</p>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/05/16/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/" rel="prev" title="「JavaScript基础」原型和原型链">
+      <i class="fa fa-chevron-left"></i> 「JavaScript基础」原型和原型链
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -263,6 +281,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%E9%98%B6%E6%AE%B5"><span class="nav-number">1.</span> <span class="nav-text">挂载阶段</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E9%98%B6%E6%AE%B5"><span class="nav-number">2.</span> <span class="nav-text">更新阶段</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD%E9%98%B6%E6%AE%B5"><span class="nav-number">3.</span> <span class="nav-text">卸载阶段</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -434,6 +453,25 @@ window.addEventListener('pjax:success', () => {
 
   
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '30cf1aa4b14a1cbce4c2',
+      clientSecret: 'ebb9219637c7ab1a0494e3fe3df9baa7c4295cf7',
+      repo        : 'feiyang1235.github.io',
+      owner       : 'feiyang1235',
+      admin       : ['feiyang1235'],
+      id          : '861cc9a21504dfb085b514bf61aeab1f',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
     </div>
 </body>
