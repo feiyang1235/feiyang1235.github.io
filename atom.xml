@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2023-06-09T07:55:40.000Z</updated>
+  <updated>2023-06-20T02:26:50.000Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>深入了解Exif：数字照片中的元数据</title>
+    <link href="http://example.com/2023/06/20/%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3Exif%EF%BC%9A%E6%95%B0%E5%AD%97%E7%85%A7%E7%89%87%E4%B8%AD%E7%9A%84%E5%85%83%E6%95%B0%E6%8D%AE/"/>
+    <id>http://example.com/2023/06/20/%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3Exif%EF%BC%9A%E6%95%B0%E5%AD%97%E7%85%A7%E7%89%87%E4%B8%AD%E7%9A%84%E5%85%83%E6%95%B0%E6%8D%AE/</id>
+    <published>2023-06-20T02:26:50.000Z</published>
+    <updated>2023-06-20T02:26:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在数字相机和智能手机的普及下，我们每天都会拍摄大量的照片。这些照片中包含了很多有用的信息，例如拍摄日期、相机型号、曝光时间、光圈、ISO和GPS坐标等。Exif（Exchangeable image file format）是可交换图像文件的简称，是一种用于数字照片的元数据格式，它可以嵌入到JPEG、TIFF、RAW和其他图像文件格式中。Exif包含了有关图像的各种信息，可以帮助我们更好地管理和组织照片，并提供更多的信息来帮助我们了解照片的背景和拍摄条件。</p><h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Exif是一种嵌入在数字照片中的元数据格式，它是由日本电子工业发展协会（JEIDA）和日本相机工业协会（CIPA）共同开发的。Exif最初是为数码相机而设计的，但现在已经被广泛应用于智能手机、平板电脑等设备中。</p><p>Exif可以嵌入到JPEG、TIFF、RAW和其他图像文件格式中。Exif包含了有关图像的各种信息，例如拍摄日期、相机制造商、曝光时间、光圈、ISO和GPS坐标等。这些信息可以帮助我们更好地管理和组织照片，并提供更多的信息来帮助我们了解照片的背景和拍摄条件。</p><h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>在Android中，我们可以使用ExifInterface类来读取和写入Exif信息。以下是一个示例代码片段，可以帮助您读取Exif信息：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ExifInterface exif = new ExifInterface(filePath);</span><br><span class="line">String make = exif.getAttribute(ExifInterface.TAG_MAKE);</span><br><span class="line">String model = exif.getAttribute(ExifInterface.TAG_MODEL);</span><br><span class="line">String datetime = exif.getAttribute(ExifInterface.TAG_DATETIME);</span><br><span class="line">String exposureTime = exif.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);</span><br><span class="line">String aperture = exif.getAttribute(ExifInterface.TAG_APERTURE);</span><br><span class="line">String iso = exif.getAttribute(ExifInterface.TAG_ISO);</span><br></pre></td></tr></table></figure><br>在上面的代码中，我们使用了ExifInterface类来读取照片中的Exif信息。我们使用了一些标签名称，例如“TAG_MAKE”、“TAG_MODEL”、“TAG_DATETIME”、“TAG_EXPOSURE_TIME”、“TAG_APERTURE”和“TAG_ISO”，以获取有关拍摄相机制造商、型号、拍摄日期、曝光时间、光圈和ISO等信息。</p><p>除此之外，我们还可以使用setAttribute()方法来写入自定义的Exif信息。以下是一个示例代码片段，可以帮助您写入自定义标签名称的Exif信息：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ExifInterface exif = new ExifInterface(filePath);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_DATETIME, &quot;2023:06:20 12:00:00&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_MAKE, &quot;Samsung&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_MODEL, &quot;Galaxy S10&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_EXPOSURE_TIME, &quot;1/100&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_APERTURE, &quot;f/2.4&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_ISO, &quot;100&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, &quot;37/1, 48/1, 0/1&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, &quot;-122/1, -30/1, 0/1&quot;);</span><br><span class="line">exif.saveAttributes();</span><br></pre></td></tr></table></figure><br>在上面的代码中，我们使用了ExifInterface类来写入照片的各种信息，例如拍摄日期、相机制造商、曝光时间、光圈、ISO和GPS坐标等。您可以根据需要添加或删除属性。</p><h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>Exif信息嵌入在JPEG、TIFF、RAW和其他图像文件格式之中。这些文件格式通常包含文件头和图像数据两部分。文件头包含了有关文件格式和图像尺寸等信息，而图像数据则包含了实际的像素数据。在文件头中，有一个称为APP1的应用程序段，用于存储Exif信息。</p><p>APP1段是一个由16个字节组成的标识符“Exif\0\0”和一个TIFF格式的IFD（图像文件目录）组成的。IFD包含了各种标签，每个标签都包含了有关图像的一些信息。标签由标签号、类型、计数和值组成。其中标签号用于区分不同的标签，类型用于说明值的类型（例如整数、浮点数或字符串），计数用于说明值的数量（例如一个整数或一个数组），而值则是实际的数据。</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Exif是一种用于数字照片的元数据格式，它可以嵌入到JPEG、TIFF、RAW和其他图像文件格式中。Exif包含了有关图像的各种信息，例如拍摄日期、相机型号、曝光时间、光圈、ISO和GPS坐标等。在Android中，我们可以使用ExifInterface类来读取和写入Exif信息。通过使用Exif，我们可以更好地管理和组织照片，并提供更多的信息来帮助我们了解照片的背景和拍摄条件。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;在数字相机和智能手机的普及下，我们每天都会拍摄大量的照片。这些照片中包含了很多有用的信息，例如拍摄日期、相机型号、曝光时间、光圈、ISO和G</summary>
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>reactNative生命周期详解</title>

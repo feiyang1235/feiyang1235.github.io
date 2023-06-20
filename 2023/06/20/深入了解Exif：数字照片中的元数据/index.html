@@ -20,19 +20,19 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="React Native组件的生命周期可以分为三个阶段：挂载阶段、更新阶段和卸载阶段。 挂载阶段constructor(props)：组件被创建时调用，可以在这里初始化state对象或绑定成员函数的this指向。 static getDerivedStateFromProps(props, state)：每次组件被重新渲染前都会调用，它可以返回一个对象来更新state，或者返回null来表示新pr">
+  <meta name="description" content="前言在数字相机和智能手机的普及下，我们每天都会拍摄大量的照片。这些照片中包含了很多有用的信息，例如拍摄日期、相机型号、曝光时间、光圈、ISO和GPS坐标等。Exif（Exchangeable image file format）是可交换图像文件的简称，是一种用于数字照片的元数据格式，它可以嵌入到JPEG、TIFF、RAW和其他图像文件格式中。Exif包含了有关图像的各种信息，可以帮助我们更好地管理">
 <meta property="og:type" content="article">
-<meta property="og:title" content="reactNative生命周期详解">
-<meta property="og:url" content="http://example.com/2023/06/09/reactNative%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:title" content="深入了解Exif：数字照片中的元数据">
+<meta property="og:url" content="http://example.com/2023/06/20/%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3Exif%EF%BC%9A%E6%95%B0%E5%AD%97%E7%85%A7%E7%89%87%E4%B8%AD%E7%9A%84%E5%85%83%E6%95%B0%E6%8D%AE/index.html">
 <meta property="og:site_name" content="二毛的博客">
-<meta property="og:description" content="React Native组件的生命周期可以分为三个阶段：挂载阶段、更新阶段和卸载阶段。 挂载阶段constructor(props)：组件被创建时调用，可以在这里初始化state对象或绑定成员函数的this指向。 static getDerivedStateFromProps(props, state)：每次组件被重新渲染前都会调用，它可以返回一个对象来更新state，或者返回null来表示新pr">
+<meta property="og:description" content="前言在数字相机和智能手机的普及下，我们每天都会拍摄大量的照片。这些照片中包含了很多有用的信息，例如拍摄日期、相机型号、曝光时间、光圈、ISO和GPS坐标等。Exif（Exchangeable image file format）是可交换图像文件的简称，是一种用于数字照片的元数据格式，它可以嵌入到JPEG、TIFF、RAW和其他图像文件格式中。Exif包含了有关图像的各种信息，可以帮助我们更好地管理">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-06-09T07:55:40.000Z">
+<meta property="article:published_time" content="2023-06-20T02:26:50.000Z">
 <meta property="article:author" content="ermao">
 <meta property="article:tag" content="Android,Gradle,React Native,Webpack,NodeJs">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2023/06/09/reactNative%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E8%AF%A6%E8%A7%A3/">
+<link rel="canonical" href="http://example.com/2023/06/20/%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3Exif%EF%BC%9A%E6%95%B0%E5%AD%97%E7%85%A7%E7%89%87%E4%B8%AD%E7%9A%84%E5%85%83%E6%95%B0%E6%8D%AE/">
 
 
 <script id="page-configurations">
@@ -45,7 +45,7 @@
   };
 </script>
 
-  <title>reactNative生命周期详解 | 二毛的博客</title>
+  <title>深入了解Exif：数字照片中的元数据 | 二毛的博客</title>
   
 
 
@@ -155,7 +155,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/06/09/reactNative%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E8%AF%A6%E8%A7%A3/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/06/20/%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3Exif%EF%BC%9A%E6%95%B0%E5%AD%97%E7%85%A7%E7%89%87%E4%B8%AD%E7%9A%84%E5%85%83%E6%95%B0%E6%8D%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -168,7 +168,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          reactNative生命周期详解
+          深入了解Exif：数字照片中的元数据
         </h1>
 
         <div class="post-meta">
@@ -178,7 +178,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-06-09 15:55:40" itemprop="dateCreated datePublished" datetime="2023-06-09T15:55:40+08:00">2023-06-09</time>
+              <time title="创建时间：2023-06-20 10:26:50" itemprop="dateCreated datePublished" datetime="2023-06-20T10:26:50+08:00">2023-06-20</time>
             </span>
 
           
@@ -192,17 +192,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><strong>React Native组件的生命周期可以分为三个阶段：挂载阶段、更新阶段和卸载阶段。</strong></p>
-<h1 id="挂载阶段"><a href="#挂载阶段" class="headerlink" title="挂载阶段"></a>挂载阶段</h1><p><code>constructor(props)</code>：组件被创建时调用，可以在这里初始化state对象或绑定成员函数的this指向。</p>
-<p><code>static getDerivedStateFromProps(props, state)</code>：每次组件被重新渲染前都会调用，它可以返回一个对象来更新state，或者返回null来表示新props不需要更新state。</p>
-<p><code>render()</code>：根据组件的props和state属性，生成虚拟DOM，即React元素。</p>
-<p><code>componentDidMount()</code>：组件渲染完成后调用，通常在这里进行一些网络请求、添加订阅等操作。</p>
-<h1 id="更新阶段"><a href="#更新阶段" class="headerlink" title="更新阶段"></a>更新阶段</h1><p><code>static getDerivedStateFromProps(props, state)</code>：和挂载阶段一样，在每次更新前都会被调用。</p>
-<p><code>shouldComponentUpdate(nextProps, nextState)</code>：组件更新前会调用这个方法，它返回一个布尔值，表示是否允许更新，默认返回true。</p>
-<p><code>render()</code>：同挂载阶段。</p>
-<p><code>getSnapshotBeforeUpdate()</code>：在最近一次渲染输出（提交到DOM节点）之前调用，它可以在组件发生变化前捕获一些信息（例如滚动位置），并在 <code>componentDidUpdate()</code>中进行处理。</p>
-<p><code>componentDidUpdate(prevProps, prevState, snapshot)</code>：组件更新后调用，通常在这里进行一些DOM操作、网络请求等操作。</p>
-<h1 id="卸载阶段"><a href="#卸载阶段" class="headerlink" title="卸载阶段"></a>卸载阶段</h1><p><code>componentWillUnmount()</code>：组件卸载前调用，通常在这里进行一些清理操作，例如取消网络请求、清除定时器等。</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在数字相机和智能手机的普及下，我们每天都会拍摄大量的照片。这些照片中包含了很多有用的信息，例如拍摄日期、相机型号、曝光时间、光圈、ISO和GPS坐标等。Exif（Exchangeable image file format）是可交换图像文件的简称，是一种用于数字照片的元数据格式，它可以嵌入到JPEG、TIFF、RAW和其他图像文件格式中。Exif包含了有关图像的各种信息，可以帮助我们更好地管理和组织照片，并提供更多的信息来帮助我们了解照片的背景和拍摄条件。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Exif是一种嵌入在数字照片中的元数据格式，它是由日本电子工业发展协会（JEIDA）和日本相机工业协会（CIPA）共同开发的。Exif最初是为数码相机而设计的，但现在已经被广泛应用于智能手机、平板电脑等设备中。</p>
+<p>Exif可以嵌入到JPEG、TIFF、RAW和其他图像文件格式中。Exif包含了有关图像的各种信息，例如拍摄日期、相机制造商、曝光时间、光圈、ISO和GPS坐标等。这些信息可以帮助我们更好地管理和组织照片，并提供更多的信息来帮助我们了解照片的背景和拍摄条件。</p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>在Android中，我们可以使用ExifInterface类来读取和写入Exif信息。以下是一个示例代码片段，可以帮助您读取Exif信息：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ExifInterface exif = new ExifInterface(filePath);</span><br><span class="line">String make = exif.getAttribute(ExifInterface.TAG_MAKE);</span><br><span class="line">String model = exif.getAttribute(ExifInterface.TAG_MODEL);</span><br><span class="line">String datetime = exif.getAttribute(ExifInterface.TAG_DATETIME);</span><br><span class="line">String exposureTime = exif.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);</span><br><span class="line">String aperture = exif.getAttribute(ExifInterface.TAG_APERTURE);</span><br><span class="line">String iso = exif.getAttribute(ExifInterface.TAG_ISO);</span><br></pre></td></tr></table></figure><br>在上面的代码中，我们使用了ExifInterface类来读取照片中的Exif信息。我们使用了一些标签名称，例如“TAG_MAKE”、“TAG_MODEL”、“TAG_DATETIME”、“TAG_EXPOSURE_TIME”、“TAG_APERTURE”和“TAG_ISO”，以获取有关拍摄相机制造商、型号、拍摄日期、曝光时间、光圈和ISO等信息。</p>
+<p>除此之外，我们还可以使用setAttribute()方法来写入自定义的Exif信息。以下是一个示例代码片段，可以帮助您写入自定义标签名称的Exif信息：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ExifInterface exif = new ExifInterface(filePath);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_DATETIME, &quot;2023:06:20 12:00:00&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_MAKE, &quot;Samsung&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_MODEL, &quot;Galaxy S10&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_EXPOSURE_TIME, &quot;1/100&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_APERTURE, &quot;f/2.4&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_ISO, &quot;100&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, &quot;37/1, 48/1, 0/1&quot;);</span><br><span class="line">exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, &quot;-122/1, -30/1, 0/1&quot;);</span><br><span class="line">exif.saveAttributes();</span><br></pre></td></tr></table></figure><br>在上面的代码中，我们使用了ExifInterface类来写入照片的各种信息，例如拍摄日期、相机制造商、曝光时间、光圈、ISO和GPS坐标等。您可以根据需要添加或删除属性。</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>Exif信息嵌入在JPEG、TIFF、RAW和其他图像文件格式之中。这些文件格式通常包含文件头和图像数据两部分。文件头包含了有关文件格式和图像尺寸等信息，而图像数据则包含了实际的像素数据。在文件头中，有一个称为APP1的应用程序段，用于存储Exif信息。</p>
+<p>APP1段是一个由16个字节组成的标识符“Exif\0\0”和一个TIFF格式的IFD（图像文件目录）组成的。IFD包含了各种标签，每个标签都包含了有关图像的一些信息。标签由标签号、类型、计数和值组成。其中标签号用于区分不同的标签，类型用于说明值的类型（例如整数、浮点数或字符串），计数用于说明值的数量（例如一个整数或一个数组），而值则是实际的数据。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Exif是一种用于数字照片的元数据格式，它可以嵌入到JPEG、TIFF、RAW和其他图像文件格式中。Exif包含了有关图像的各种信息，例如拍摄日期、相机型号、曝光时间、光圈、ISO和GPS坐标等。在Android中，我们可以使用ExifInterface类来读取和写入Exif信息。通过使用Exif，我们可以更好地管理和组织照片，并提供更多的信息来帮助我们了解照片的背景和拍摄条件。</p>
 
     </div>
 
@@ -218,13 +215,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/05/16/%E3%80%8CJavaScript%E5%9F%BA%E7%A1%80%E3%80%8D%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/" rel="prev" title="「JavaScript基础」原型和原型链">
-      <i class="fa fa-chevron-left"></i> 「JavaScript基础」原型和原型链
+    <a href="/2023/06/09/reactNative%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E8%AF%A6%E8%A7%A3/" rel="prev" title="reactNative生命周期详解">
+      <i class="fa fa-chevron-left"></i> reactNative生命周期详解
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/06/20/%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3Exif%EF%BC%9A%E6%95%B0%E5%AD%97%E7%85%A7%E7%89%87%E4%B8%AD%E7%9A%84%E5%85%83%E6%95%B0%E6%8D%AE/" rel="next" title="深入了解Exif：数字照片中的元数据">
-      深入了解Exif：数字照片中的元数据 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -284,7 +278,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%E9%98%B6%E6%AE%B5"><span class="nav-number">1.</span> <span class="nav-text">挂载阶段</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E9%98%B6%E6%AE%B5"><span class="nav-number">2.</span> <span class="nav-text">更新阶段</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD%E9%98%B6%E6%AE%B5"><span class="nav-number">3.</span> <span class="nav-text">卸载阶段</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -467,7 +461,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'feiyang1235.github.io',
       owner       : 'feiyang1235',
       admin       : ['feiyang1235'],
-      id          : '861cc9a21504dfb085b514bf61aeab1f',
+      id          : 'e6d34a3cdd05e4bd29cbe9436acfcf74',
         language: 'zh-CN',
       distractionFreeMode: true
     });
